@@ -176,7 +176,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
             if(gamepad2.left_trigger > 0.5){
-                slide1.setPower(0.75);
+                slide1.setPower(0.95);
                 //slide2.setPower(0.5);
             }
             if(gamepad2.right_trigger > 0.5){
@@ -251,6 +251,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 rf.setPower(0.25);
                 rb.setPower(0.25);
             }
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("you need jesus",  43110);
