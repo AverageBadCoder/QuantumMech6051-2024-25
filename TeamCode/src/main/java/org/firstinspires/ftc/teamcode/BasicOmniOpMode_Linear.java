@@ -215,6 +215,43 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             lb.setPower(leftBackPower);
             rb.setPower(rightBackPower);
 
+            if(gamepad1.dpad_up){
+                lf.setPower(0.25);
+                lb.setPower(0.25);
+                rf.setPower(0.25);
+                rb.setPower(0.25);
+            }
+            if(gamepad1.dpad_down){
+                lf.setPower(-0.25);
+                lb.setPower(-0.25);
+                rf.setPower(-0.25);
+                rb.setPower(-0.25);
+            }
+            if(gamepad1.dpad_left){
+                lf.setPower(-0.25);
+                lb.setPower(0.25);
+                rf.setPower(0.25);
+                rb.setPower(-0.25);
+            }
+            if(gamepad1.dpad_right){
+                lf.setPower(0.25);
+                lb.setPower(-0.25);
+                rf.setPower(-0.25);
+                rb.setPower(0.25);
+            }
+            if(gamepad1.right_bumper){
+                lf.setPower(0.25);
+                lb.setPower(0.25);
+                rf.setPower(-0.25);
+                rb.setPower(-0.25);
+            }
+            if(gamepad1.left_bumper){
+                lf.setPower(-0.25);
+                lb.setPower(-0.25);
+                rf.setPower(0.25);
+                rb.setPower(0.25);
+            }
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("you need jesus",  43110);
             telemetry.addData("hey hardware you're losers LLLLLLLLLLLLLLL", 707);
