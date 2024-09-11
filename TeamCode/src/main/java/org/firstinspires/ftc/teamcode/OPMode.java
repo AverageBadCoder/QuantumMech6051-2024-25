@@ -162,6 +162,7 @@ public class OPMode extends LinearOpMode {
             rf.setPower(rightFrontPower);
             lb.setPower(leftBackPower);
             rb.setPower(rightBackPower);
+            //TODO add slowmode
 
             if(gamepad2.right_trigger > 0.5){
                 dwayne.setPower(-0.6);
