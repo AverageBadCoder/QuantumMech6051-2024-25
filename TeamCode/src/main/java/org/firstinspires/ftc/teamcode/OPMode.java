@@ -74,6 +74,8 @@ public class OPMode extends LinearOpMode {
     private DcMotor lb = null;
     private DcMotor rf = null;
     private DcMotor rb = null;
+    // dwayne the double reverse four bar
+    private DcMotor dwayne = null;
 
     @Override
     public void runOpMode() {
@@ -84,6 +86,7 @@ public class OPMode extends LinearOpMode {
         lb = hardwareMap.get(DcMotor.class, "leftBack");
         rf = hardwareMap.get(DcMotor.class, "rightFront");
         rb = hardwareMap.get(DcMotor.class, "rightBack");
+        dwayne = hardwareMap.get(DcMotor.class, "dwayne");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -99,6 +102,7 @@ public class OPMode extends LinearOpMode {
         lb.setDirection(DcMotor.Direction.REVERSE);
         rf.setDirection(DcMotor.Direction.FORWARD);
         rb.setDirection(DcMotor.Direction.FORWARD);
+        dwayne.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -158,6 +162,16 @@ public class OPMode extends LinearOpMode {
             rf.setPower(rightFrontPower);
             lb.setPower(leftBackPower);
             rb.setPower(rightBackPower);
+
+            if(gamepad2.right_trigger > 0.5){
+                dwayne.setPower(-0.6);
+                //down
+            }
+            if(gamepad2.left_trigger > 0.5){
+                dwayne.setPower(0.6);
+                //up
+            }
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
