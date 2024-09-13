@@ -29,12 +29,17 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -75,7 +80,10 @@ public class OPMode extends LinearOpMode {
     private DcMotor rf = null;
     private DcMotor rb = null;
     // dwayne the double reverse four bar
-    private DcMotor dwayne = null;
+    private DcMotor dave = null;
+    private Servo intake1 = null;
+    private Servo intake2 = null;
+    IMU imu;
 
     @Override
     public void runOpMode() {
@@ -86,7 +94,10 @@ public class OPMode extends LinearOpMode {
         lb = hardwareMap.get(DcMotor.class, "leftBack");
         rf = hardwareMap.get(DcMotor.class, "rightFront");
         rb = hardwareMap.get(DcMotor.class, "rightBack");
-        dwayne = hardwareMap.get(DcMotor.class, "dwayne");
+        imu = hardwareMap.get(IMU.class, "imu");
+        dave = hardwareMap.get(DcMotor.class, "dave");
+        intake1 = hardwareMap.get(Servo.class, "intake1");
+        intake2 = hardwareMap.get(Servo.class, "intake2");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -102,7 +113,14 @@ public class OPMode extends LinearOpMode {
         lb.setDirection(DcMotor.Direction.REVERSE);
         rf.setDirection(DcMotor.Direction.FORWARD);
         rb.setDirection(DcMotor.Direction.FORWARD);
-        dwayne.setDirection(DcMotor.Direction.FORWARD);
+        dave.setDirection(DcMotor.Direction.FORWARD);
+
+        //TODO hub orientation
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -116,9 +134,14 @@ public class OPMode extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
+            double ogaxial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double oglateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
+            YawPitchRollAngles robotOrientation;
+            robotOrientation = imu.getRobotYawPitchRollAngles();
+            double robotyaw = robotOrientation.getYaw(AngleUnit.DEGREES);
+            double axial = oglateral*Math.cos(robotyaw)-ogaxial*Math.sin(robotyaw);
+            double lateral = oglateral*Math.cos(robotyaw)+ogaxial*Math.sin(robotyaw);
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -158,20 +181,62 @@ public class OPMode extends LinearOpMode {
             */
 
             // Send calculated power to wheels
+
+            if(gamepad1.dpad_up){
+                leftFrontPower  = 0.1;
+                rightFrontPower = 0.1;
+                leftBackPower   = 0.1;
+                rightBackPower  = 0.1;
+            }
+            if(gamepad1.dpad_down){
+                leftFrontPower  = -0.1;
+                rightFrontPower = -0.1;
+                leftBackPower   = -0.1;
+                rightBackPower  = -0.1;
+            }
+            if(gamepad1.dpad_left){
+                leftFrontPower  = -0.2;
+                rightFrontPower = 0.2;
+                leftBackPower   = 0.2;
+                rightBackPower  = -0.2;
+            }
+            if(gamepad1.dpad_right){
+                leftFrontPower  = 0.2;
+                rightFrontPower = -0.2;
+                leftBackPower   = -0.2;
+                rightBackPower  = 0.2;
+            }
+
+            if(gamepad2.right_trigger > 0.5){
+                dave.setPower(-0.6);
+                //down
+            }
+            if(gamepad2.left_trigger > 0.5){
+                dave.setPower(0.6);
+                //up
+            }
+
+            if(gamepad2.a){
+                //open
+                intake1.setPosition(1);
+            }
+            if(gamepad2.b){
+                //close
+                intake2.setPosition(2);
+            }
+
+            if(gamepad2.right_bumper){
+                //rotate one way
+                intake2.setPosition(1);
+            }
+            if(gamepad2.left_bumper){
+                //rotate other
+                intake2.setPosition(2);
+            }
             lf.setPower(leftFrontPower);
             rf.setPower(rightFrontPower);
             lb.setPower(leftBackPower);
             rb.setPower(rightBackPower);
-            //TODO add slowmode
-
-            if(gamepad2.right_trigger > 0.5){
-                dwayne.setPower(-0.6);
-                //down
-            }
-            if(gamepad2.left_trigger > 0.5){
-                dwayne.setPower(0.6);
-                //up
-            }
 
 
             // Show the elapsed game time and wheel power.
