@@ -70,7 +70,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  */
 
 @TeleOp(name="Driver Control", group="Linear OpMode")
-@Disabled
+
 public class iterativeTest extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.

@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="iterative TEST")
-//@Disabled
+@TeleOp(name="servo TEST")
+
 public class servoTest extends OpMode
 {
     // Declare OpMode members.
