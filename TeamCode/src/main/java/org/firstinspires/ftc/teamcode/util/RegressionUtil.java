@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import androidx.annotation.Nullable;
 
 import com.acmerobotics.roadrunner.kinematics.Kinematics;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Various regression utilities.
  */
+@Disabled
 public class RegressionUtil {
 
     /**

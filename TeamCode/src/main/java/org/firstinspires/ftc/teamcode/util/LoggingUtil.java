@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
@@ -10,6 +12,7 @@ import java.util.List;
 /**
  * Utility functions for log files.
  */
+@Disabled
 public class LoggingUtil {
     public static final File ROAD_RUNNER_FOLDER =
             new File(AppUtil.ROOT_FOLDER + "/RoadRunner/");

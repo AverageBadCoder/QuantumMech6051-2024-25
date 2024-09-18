@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 /**
  * IMU axes signs in the order XYZ (after remapping).
  */
+@Disabled
 public enum AxesSigns {
     PPP(0b000),
     PPN(0b001),

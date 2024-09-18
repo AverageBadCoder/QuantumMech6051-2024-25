@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 
 /**
  * Various utility functions for the BNO055 IMU.
  */
+@Disabled
 public class BNO055IMUUtil {
     /**
      * Error for attempting an illegal remapping (lhs or multiple same axes)

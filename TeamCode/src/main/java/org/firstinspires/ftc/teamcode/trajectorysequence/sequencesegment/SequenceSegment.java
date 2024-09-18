@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import java.util.List;
+@Disabled
 
 public abstract class SequenceSegment {
     private final double duration;
