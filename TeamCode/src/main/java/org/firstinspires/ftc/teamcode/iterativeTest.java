@@ -80,7 +80,7 @@ public class iterativeTest extends LinearOpMode {
     private DcMotor rf = null;
     private DcMotor rb = null;
     // dwayne the double reverse four bar
-    private DcMotor dave = null;
+    //private DcMotor dave = null;
     private Servo intake1 = null;
     private Servo intake2 = null;
     IMU imu;
@@ -95,7 +95,7 @@ public class iterativeTest extends LinearOpMode {
         rf = hardwareMap.get(DcMotor.class, "rightFront");
         rb = hardwareMap.get(DcMotor.class, "rightBack");
         imu = hardwareMap.get(IMU.class, "imu");
-        dave = hardwareMap.get(DcMotor.class, "dave");
+        //dave = hardwareMap.get(DcMotor.class, "dave");
         intake1 = hardwareMap.get(Servo.class, "intake1");
         intake2 = hardwareMap.get(Servo.class, "intake2");
 
@@ -113,16 +113,16 @@ public class iterativeTest extends LinearOpMode {
         lb.setDirection(DcMotor.Direction.REVERSE);
         rf.setDirection(DcMotor.Direction.FORWARD);
         rb.setDirection(DcMotor.Direction.FORWARD);
-        dave.setDirection(DcMotor.Direction.FORWARD);
+        //dave.setDirection(DcMotor.Direction.FORWARD);
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        dave.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //dave.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //TODO hub orientation
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
@@ -150,10 +150,10 @@ public class iterativeTest extends LinearOpMode {
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            double leftFrontPower  = ogaxial + oglateral + yaw;
+            double rightFrontPower = ogaxial - oglateral - yaw;
+            double leftBackPower   = ogaxial - oglateral + yaw;
+            double rightBackPower  = ogaxial + oglateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -212,14 +212,14 @@ public class iterativeTest extends LinearOpMode {
                 rightBackPower  = 0.2;
             }
 
-            if(gamepad2.right_trigger > 0.5){
-                dave.setPower(-0.6);
-                //down
-            }
-            if(gamepad2.left_trigger > 0.5){
-                dave.setPower(0.6);
-                //up
-            }
+//            if(gamepad2.right_trigger > 0.5){
+//                dave.setPower(-0.6);
+//                //down
+//            }
+//            if(gamepad2.left_trigger > 0.5){
+//                dave.setPower(0.6);
+//                //up
+//            }
 
             if(gamepad2.a){
                 //open

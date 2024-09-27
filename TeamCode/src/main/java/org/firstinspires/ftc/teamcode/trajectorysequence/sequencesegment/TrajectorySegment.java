@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import java.util.Collections;
