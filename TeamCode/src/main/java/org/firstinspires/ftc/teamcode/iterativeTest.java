@@ -33,7 +33,9 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -81,8 +83,9 @@ public class iterativeTest extends LinearOpMode {
     private DcMotor rb = null;
     // dwayne the double reverse four bar
     //private DcMotor dave = null;
-    private Servo intake1 = null;
-    private Servo intake2 = null;
+    private CRServo intake1 = null;
+    private CRServo intake2 = null;
+    private Servo wrist = null;
     IMU imu;
 
     @Override
@@ -96,8 +99,9 @@ public class iterativeTest extends LinearOpMode {
         rb = hardwareMap.get(DcMotor.class, "rightBack");
         imu = hardwareMap.get(IMU.class, "imu");
         //dave = hardwareMap.get(DcMotor.class, "dave");
-        intake1 = hardwareMap.get(Servo.class, "intake1");
-        intake2 = hardwareMap.get(Servo.class, "intake2");
+        intake1 = hardwareMap.get(CRServo.class, "intake1");
+        intake2 = hardwareMap.get(CRServo.class, "intake2");
+        wrist = hardwareMap.get(Servo.class, "wrist");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -220,24 +224,31 @@ public class iterativeTest extends LinearOpMode {
 //                dave.setPower(0.6);
 //                //up
 //            }
+            intake2.setDirection(DcMotorSimple.Direction.REVERSE);
 
             if(gamepad2.a){
                 //open
-                intake1.setPosition(1);
+                intake1.setPower(0.5);
+                intake2.setPower(0.5);
             }
             if(gamepad2.b){
                 //close
-                intake2.setPosition(2);
+                intake1.setPower(-0.5);
+                intake2.setPower(-0.5);
             }
 
+            //TODO get wrist servo positions
             if(gamepad2.right_bumper){
-                //rotate one way
-                intake2.setPosition(1);
+                //wrist up
+                wrist.setPosition(1);
             }
+
             if(gamepad2.left_bumper){
-                //rotate other
-                intake2.setPosition(2);
+                //wrist down
+                wrist.setPosition(2);
             }
+
+
             lf.setPower(leftFrontPower);
             rf.setPower(rightFrontPower);
             lb.setPower(leftBackPower);
