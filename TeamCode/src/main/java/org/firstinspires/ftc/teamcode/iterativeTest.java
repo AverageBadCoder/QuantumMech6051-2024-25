@@ -237,7 +237,7 @@ public class iterativeTest extends LinearOpMode {
                 intake2.setPower(-0.5);
             }
 
-            //TODO get wrist servo positions
+            //TODO get wrist servo position
             if(gamepad2.right_bumper){
                 //wrist up
                 wrist.setPosition(1);
