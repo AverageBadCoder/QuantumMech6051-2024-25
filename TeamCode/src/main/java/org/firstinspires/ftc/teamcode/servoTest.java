@@ -28,32 +28,40 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 public class servoTest extends OpMode
 {
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-
-    private DcMotor leftFront = null;
-    //    port 3
-    private DcMotor leftBack = null;
-    //    port 1
-    private DcMotor rightFront = null;
-    //    port 2
-    private DcMotor rightBack = null;
-    //    expansion hub port 0
-    private DcMotor liftMotor = null; //turn
-
-    private Encoder liftEnc = null;
-
-    Servo servo_claw;
-    double servo_claw_pos;
-    static final double SERVO_CLAW_INIT = .3;
-    static final double SERVO_CLAW_GRAB = .55;
-
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
+//    private ElapsedTime runtime = new ElapsedTime();
+//
+//    private DcMotor leftFront = null;
+//    //    port 3
+//    private DcMotor leftBack = null;
+//    //    port 1
+//    private DcMotor rightFront = null;
+//    //    port 2
+//    private DcMotor rightBack = null;
+//    //    expansion hub port 0
+//    private DcMotor liftMotor = null; //turn
+    private Servo servo1 = null;
+    private Servo servo2 = null;
+//
+//    private Encoder liftEnc = null;
+//
+//    Servo servo_claw;
+//    double servo_claw_pos;
+//    static final double SERVO_CLAW_INIT = .3;
+//    static final double SERVO_CLAW_GRAB = .55;
+//
+//
+    double spos1 = servo1.getPosition();
+    double spos2 = servo2.getPosition();
+//    /*
+//     * Code to run ONCE when the driver hits INIT
+//     */
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
+        servo2 = hardwareMap.get(Servo.class, "servo2");
+
+
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -67,10 +75,10 @@ public class servoTest extends OpMode
 //
 //        liftEnc = new Encoder(hardwareMap.get(DcMotorEx.class, "liftMotor"));
 
-        servo_claw = hardwareMap.servo.get("servo_claw");
-        servo_claw_pos = SERVO_CLAW_INIT;
-
-        servo_claw.setPosition(servo_claw_pos);
+//        servo_claw = hardwareMap.servo.get("servo_claw");
+//        servo_claw_pos = SERVO_CLAW_INIT;
+//
+//        servo_claw.setPosition(servo_claw_pos);
 
 
 
@@ -114,7 +122,6 @@ public class servoTest extends OpMode
      */
     @Override
     public void start() {
-        runtime.reset();
     }
 
     /*
@@ -123,60 +130,16 @@ public class servoTest extends OpMode
     @Override
     public void loop() {
 
-        double leftFrontPower;
-        double leftBackPower;
-        double rightFrontPower;
-        double rightBackPower;
+        if(gamepad1.a){
+            servo1.setPosition(spos1 + 0.5);
+            servo2.setPosition(spos2 + 0.5);
 
-        double liftPower;
-
-        final double JOYSTICK_SEN = .007;
-        final double JOYSTICK_SENTEST = .005; //made really low might not work
-//
-//        double lx = Math.abs(gamepad1.left_stick_x)< JOYSTICK_SEN ? 0 : gamepad1.left_stick_x;
-//        //lx is turning
-//        double rx = Math.abs(gamepad1.right_stick_x)< JOYSTICK_SEN ? 0 : gamepad1.right_stick_x;
-//        //rx is strafing
-//        double ry = Math.abs(gamepad1.right_stick_y)< JOYSTICK_SEN ? 0 : gamepad1.right_stick_y;
-//        //llx
-//        double rrx = Math.abs(gamepad2.left_stick_x)< JOYSTICK_SENTEST ? 0 : gamepad2.left_stick_x;
-//        //^^turn
-
-        // Choose to drive using either Tank Mode, or POV Mode
-
-//        leftBackPower    = Range.clip(-lx - rx - ry, -1.0, 1.0);
-//        leftFrontPower    = Range.clip(-lx + rx - ry, -1.0, 1.0);
-//        rightFrontPower   = Range.clip(-lx + rx + ry, -1.0, 1.0);
-//        rightBackPower   = Range.clip(-lx - rx + ry, -1.0, 1.0) ;
-//        liftPower = Range.clip(rrx, -1.0, 1.0);
-//
-
-        // Send calculated power to wheels
-//        double maxSpeed =0.55;
-//        leftFront.setPower(leftFrontPower*maxSpeed);
-//        leftBack.setPower(leftBackPower*maxSpeed);
-//        rightFront.setPower(rightFrontPower*maxSpeed);
-//        rightBack.setPower(rightBackPower*maxSpeed);
-//
-//        liftMotor.setPower(liftPower*.4);
-
-//        if(liftPower < 0){
-//            liftPower = liftPower*.5;
-//        }else{
-//            liftPowerT = liftPowerT*.93;
-//        }
-//        liftMotorT.setPower(liftPowerT);
-
-
-        if (gamepad2.x) {
-            servo_claw_pos = SERVO_CLAW_INIT;
         }
-        if (gamepad2.b) {
-            servo_claw_pos = SERVO_CLAW_GRAB;
+        if(gamepad1.b){
+            servo1.setPosition(spos1 - 0.5);
+            servo2.setPosition(spos2 - 0.5);
+
         }
-
-        servo_claw.setPosition(servo_claw_pos);
-
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
         // leftPower  = -gamepad1.left_stick_y ;
@@ -186,10 +149,8 @@ public class servoTest extends OpMode
 
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("x", gamepad1.x);
-        telemetry.addData("b", gamepad1.b);
-        telemetry.addData("LIFT turn", liftEnc.getCurrentPosition());
+        telemetry.addData("servo 1:", spos1);
+        telemetry.addData("servo 2:", spos2);
 
         telemetry.update();
 //        telemetry.addData("servo", "gamepad1.x")

@@ -81,11 +81,16 @@ public class iterativeTest extends LinearOpMode {
     private DcMotor lb = null;
     private DcMotor rf = null;
     private DcMotor rb = null;
+    private DcMotor lift = null;
+    private DcMotor reach = null;
     // dwayne the double reverse four bar
     //private DcMotor dave = null;
     private CRServo intake1 = null;
     private CRServo intake2 = null;
-    private Servo wrist = null;
+    private Servo wrist1 = null;
+    private Servo wrist2 = null;
+    private Servo shoulder1 = null;
+    private Servo shoulder2 = null;
     IMU imu;
 
     @Override
@@ -98,10 +103,16 @@ public class iterativeTest extends LinearOpMode {
         rf = hardwareMap.get(DcMotor.class, "rightFront");
         rb = hardwareMap.get(DcMotor.class, "rightBack");
         imu = hardwareMap.get(IMU.class, "imu");
+        lift = hardwareMap.get(DcMotor.class, "lift");
+        reach = hardwareMap.get(DcMotor.class, "reach");
         //dave = hardwareMap.get(DcMotor.class, "dave");
         intake1 = hardwareMap.get(CRServo.class, "intake1");
         intake2 = hardwareMap.get(CRServo.class, "intake2");
-        wrist = hardwareMap.get(Servo.class, "wrist");
+        wrist1 = hardwareMap.get(Servo.class, "wrist1");
+        wrist2 = hardwareMap.get(Servo.class, "wrist2");
+        shoulder1 = hardwareMap.get(Servo.class, "shoulder1");
+        shoulder2 = hardwareMap.get(Servo.class, "shoulder2");
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -117,19 +128,23 @@ public class iterativeTest extends LinearOpMode {
         lb.setDirection(DcMotor.Direction.REVERSE);
         rf.setDirection(DcMotor.Direction.FORWARD);
         rb.setDirection(DcMotor.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.FORWARD);
+        reach.setDirection(DcMotor.Direction.FORWARD);
         //dave.setDirection(DcMotor.Direction.FORWARD);
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        reach.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //dave.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //TODO hub orientation
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
-
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
+//        //TODO hub orientation
+//        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+//        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+//
+//        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+//        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -143,21 +158,21 @@ public class iterativeTest extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double ogaxial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double oglateral =  gamepad1.left_stick_x;
+            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
-            YawPitchRollAngles robotOrientation;
-            robotOrientation = imu.getRobotYawPitchRollAngles();
-            double robotyaw = robotOrientation.getYaw(AngleUnit.DEGREES);
-            double axial = oglateral*Math.cos(robotyaw)-ogaxial*Math.sin(robotyaw);
-            double lateral = oglateral*Math.cos(robotyaw)+ogaxial*Math.sin(robotyaw);
+//            YawPitchRollAngles robotOrientation;
+//            robotOrientation = imu.getRobotYawPitchRollAngles();
+//            double robotyaw = robotOrientation.getYaw(AngleUnit.DEGREES);
+//            double axial = oglateral*Math.cos(robotyaw)-ogaxial*Math.sin(robotyaw);
+//            double lateral = oglateral*Math.cos(robotyaw)+ogaxial*Math.sin(robotyaw);
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = ogaxial + oglateral + yaw;
-            double rightFrontPower = ogaxial - oglateral - yaw;
-            double leftBackPower   = ogaxial - oglateral + yaw;
-            double rightBackPower  = ogaxial + oglateral - yaw;
+            double leftFrontPower  = axial + lateral + yaw;
+            double rightFrontPower = axial - lateral - yaw;
+            double leftBackPower   = axial - lateral + yaw;
+            double rightBackPower  = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -215,6 +230,22 @@ public class iterativeTest extends LinearOpMode {
                 leftBackPower   = -0.2;
                 rightBackPower  = 0.2;
             }
+            if(gamepad1.right_bumper){
+                leftFrontPower  = 0.2;
+                rightFrontPower = -0.2;
+                leftBackPower   = 0.2;
+                rightBackPower  = -0.2;
+            }
+            if(gamepad1.left_bumper){
+                leftFrontPower  = -0.2;
+                rightFrontPower = 0.2;
+                leftBackPower   = -0.2;
+                rightBackPower  = 0.2;
+            }
+
+
+            lift.setPower(-gamepad2.left_stick_y);
+            reach.setPower(-gamepad2.right_stick_y);
 
 //            if(gamepad2.right_trigger > 0.5){
 //                dave.setPower(-0.6);
@@ -236,16 +267,34 @@ public class iterativeTest extends LinearOpMode {
                 intake1.setPower(-0.5);
                 intake2.setPower(-0.5);
             }
+            else{
+                intake1.setPower(0);
+                intake2.setPower(0);
+            }
 
-            //TODO get wrist servo position
+            //TODO get wrist and shoulder servo position
             if(gamepad2.right_bumper){
                 //wrist up
-                wrist.setPosition(1);
+                wrist1.setPosition(1);
+                wrist2.setPosition(1);
             }
 
             if(gamepad2.left_bumper){
                 //wrist down
-                wrist.setPosition(2);
+                wrist1.setPosition(2);
+                wrist2.setPosition(2);
+            }
+
+            if(gamepad2.right_trigger >= 0.5){
+                //shoulder up
+                shoulder1.setPosition(1);
+                shoulder2.setPosition(1);
+            }
+
+            if(gamepad2.left_trigger >= 0.5){
+                //shoudler down
+                shoulder1.setPosition(2);
+                shoulder2.setPosition(2);
             }
 
 
